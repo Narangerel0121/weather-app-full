@@ -55,34 +55,44 @@ export default function Home() {
   }, [selectedCity]);
 
   const handleImageByText = () => {
-    if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("cloud")) {
+    if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("cloudy")) {
       setDayImage("/assets/daycloud.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("snow")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("snow")) {
       setDayImage("/assets/daysnow.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("storm")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("storm")) {
       setDayImage("/assets/daystorm.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("rain")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("rain")) {
       setDayImage("/assets/dayrain.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("wind")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("drizzle")) {
+      setDayImage("/assets/dayrain.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("wind")) {
       setDayImage("/assets/daywind.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("clear")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("clear")) {
       setDayImage("/assets/sun.svg")
-    } 
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("sunny")) {
+      setDayImage("/assets/sun.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("overcast")) {
+      setDayImage("/assets/daycloud.svg")
+    }
   };
 
   const handleNightImageByText = () => {
-    if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("cloud")) {
+    if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("cloudy")) {
       setNightImage("/assets/nightcloud.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("snow")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("snow")) {
       setNightImage("/assets/nightsnow.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("storm")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("storm")) {
       setNightImage("/assets/nightstorm.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("rain")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("rain")) {
       setNightImage("/assets/nightrain.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("wind")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("drizzle")) {
+      setNightImage("/assets/nightrain.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("wind")) {
       setNightImage("/assets/nightwind.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("clear")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("clear")) {
       setNightImage("/assets/moon.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("overcast")) {
+      setNightImage("/assets/nightcloud.svg")
     }
   }
 
@@ -96,7 +106,7 @@ export default function Home() {
       <div className="bg-[#F3F4F6] w-1/2">
         <div className="mt-10 ml-10">
           <div className="flex bg-white backdrop-blur-xs rounded-full px-6 py-4 w-1/2 gap-4">
-            <img src="icons/search.svg"  />
+            <img src="icons/search.svg" />
             <input placeholder="Search..." onChange={handleSearch} value={value} className="focus:outline-none placeholder: font-bold text-3xl" />
           </div>
           <div className={`absolute z-10 w-[410px] rounded-3xl object-fit p-6 mt-3 bg-white backdrop-blur-xs ${filteredCities.length === 0 ? "invisible" : "visible"}`}>
