@@ -1,103 +1,157 @@
-import Image from "next/image";
+"use client"
+import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import { MapPin } from "lucide";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [countries, setCountries] = useState([]);
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("Ulaanbaatar");
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [value, setValue] = useState("");
+  const [dayImage, setDayImage] = useState("/assets/sun.svg");
+  const [nightImage, setNightImage] = useState("/assets/moon.svg");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const getCitiesWithCountries = async () => {
+      const response = await fetch("https:/countriesnow.space/api/v0.1/countries");
+      const citiesWithCountries = await response.json();
+      // console.log(citiesWithCountries.data);
+      setCountries(citiesWithCountries.data);
+    }
+    getCitiesWithCountries();
+  }, [])
+
+  const arr = [];
+  countries.map((country) => {
+    country.cities.map((city) => { arr.push(`${city}, ${country.country}`) })
+  });
+
+  const handleSearch = (event) => {
+    setValue(event.target.value)
+    if (value) {
+      const filteredCitiesBySearch = arr.filter((a) => {
+        return a.toLowerCase().startsWith(value.toLowerCase())
+      }).slice(0, 4);
+      // console.log(filteredCitiesBySearch)
+      setFilteredCities(filteredCitiesBySearch);
+    }
+  };
+
+  const handleSelectedCity = (index) => {
+    setSelectedCity(filteredCities[index]);
+    setFilteredCities([]);
+    setValue("");
+  };
+
+  useEffect(() => {
+    const getWeatherByCity = async () => {
+      const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=f3ba84b06d684526a46225752251302&q=${selectedCity}`);
+      const weather = await response.json();
+      console.log(weather);
+      setCurrentWeather(weather);
+    }
+    getWeatherByCity();
+  }, [selectedCity]);
+
+  const handleImageByText = () => {
+    if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("cloud")) {
+      setDayImage("/assets/daycloud.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("snow")) {
+      setDayImage("/assets/daysnow.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("storm")) {
+      setDayImage("/assets/daystorm.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("rain")) {
+      setDayImage("/assets/dayrain.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("wind")) {
+      setDayImage("/assets/daywind.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.includes("clear")) {
+      setDayImage("/assets/sun.svg")
+    } 
+  };
+
+  const handleNightImageByText = () => {
+    if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("cloud")) {
+      setNightImage("/assets/nightcloud.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("snow")) {
+      setNightImage("/assets/nightsnow.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("storm")) {
+      setNightImage("/assets/nightstorm.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("rain")) {
+      setNightImage("/assets/nightrain.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("wind")) {
+      setNightImage("/assets/nightwind.svg")
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.includes("clear")) {
+      setNightImage("/assets/moon.svg")
+    }
+  }
+
+  useEffect(() => {
+    handleImageByText();
+    handleNightImageByText();
+  }, [currentWeather])
+
+  return (
+    <div className="flex h-screen">
+      <div className="bg-[#F3F4F6] w-1/2">
+        <div className="mt-10 ml-10">
+          <div className="flex bg-white backdrop-blur-xs rounded-full px-6 py-4 w-1/2 gap-4">
+            <img src="icons/search.svg"  />
+            <input placeholder="Search..." onChange={handleSearch} value={value} className="focus:outline-none placeholder: font-bold text-3xl" />
+          </div>
+          <div className={`absolute z-10 w-[410px] rounded-3xl object-fit p-6 mt-3 bg-white backdrop-blur-xs ${filteredCities.length === 0 ? "invisible" : "visible"}`}>
+            {filteredCities.map((city, index) => {
+              return <div key={nanoid()} onClick={() => handleSelectedCity(index)} className="text-2xl font-bold flex gap-4 pb-2"><span><img src="/icons/nightpin.svg" /></span>{city}</div>
+            })}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="rounded-4xl bg-white/75 backdrop-blur-xs w-1/2 object-fit mx-auto mt-25 px-12 py-16">
+          <div className="flex justify-between">
+            <div>
+              <p className="text-gray-400 text-leg font-medium">{currentWeather?.forecast.forecastday[0].date}</p>
+              <h1 className="text-5xl font-extrabold">{currentWeather?.location.name}</h1>
+            </div>
+            <img src="/icons/daypin.svg" />
+          </div>
+          <div className="w-[277px] h-[277px] mx-auto rounded-full">
+            <img src={`${dayImage}`} className="w-[264px] h-[264px] mt-6" />
+          </div>
+          <div className="mt-3 mb-12">
+            <h1 className="py-3 font-extrabold text-9xl text-transparent bg-clip-text bg-linear-to-bl from-[#111827] to-[#6B7280]">{`${currentWeather?.forecast.forecastday[0].hour[12].temp_c}°`}</h1>
+            <p className="font-extrabold text-2xl text-[#FF8E27]">{currentWeather?.forecast.forecastday[0].hour[12].condition.text}</p>
+          </div>
+          <div className="flex gap-16">
+            <img src="/icons/dayhouse.svg" />
+            <img src="/icons/daybotpin.svg" />
+            <img src="/icons/dayheart.svg" />
+            <img src="/icons/dayuser.svg" />
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#0F141E] w-1/2 text-white">
+        <div className="mt-[202px] rounded-4xl bg-[#1F2937]/75 backdrop-blur-xs w-1/2 object-fit mx-auto mt-25 px-12 py-16">
+          <div className="flex justify-between">
+            <div>
+              <p className="text-gray-400 text-leg font-medium">{currentWeather?.forecast.forecastday[0].date}</p>
+              <h1 className="text-5xl font-extrabold">{currentWeather?.location.name}</h1>
+            </div>
+            <img src="/icons/nightpin.svg" />
+          </div>
+          <div className="w-[277px] h-[277px] mx-auto">
+            <img src={`${nightImage}`} className="w-[264px] h-[264px] mt-6 rounded-full" />
+          </div>
+          <div className="mt-3 mb-12">
+            <h1 className="py-3 font-extrabold text-9xl text-transparent bg-clip-text bg-linear-to-bl from-gray-100 to-gray-700">{`${currentWeather?.forecast.forecastday[0].hour[21].temp_c}°`}</h1>
+            <p className="font-extrabold text-2xl text-[#777CCE]">{currentWeather?.forecast.forecastday[0].hour[21].condition.text}</p>
+          </div>
+          <div className="flex gap-16">
+            <img src="/icons/nighthouse.svg" />
+            <img src="/icons/botnightpin.svg" />
+            <img src="/icons/nightheart.svg" />
+            <img src="/icons/nightuser.svg" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
