@@ -59,7 +59,7 @@ export default function Home() {
       setDayImage("/assets/daycloud.svg")
     } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("snow")) {
       setDayImage("/assets/daysnow.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("storm")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("thunderstorm")) {
       setDayImage("/assets/daystorm.svg")
     } else if (currentWeather?.forecast.forecastday[0].hour[12].condition.text.toLowerCase().includes("rain")) {
       setDayImage("/assets/dayrain.svg")
@@ -81,7 +81,7 @@ export default function Home() {
       setNightImage("/assets/nightcloud.svg")
     } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("snow")) {
       setNightImage("/assets/nightsnow.svg")
-    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("storm")) {
+    } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("thhunderstorm")) {
       setNightImage("/assets/nightstorm.svg")
     } else if (currentWeather?.forecast.forecastday[0].hour[21].condition.text.toLowerCase().includes("rain")) {
       setNightImage("/assets/nightrain.svg")
