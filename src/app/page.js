@@ -116,6 +116,7 @@ export default function Home() {
               })}
             </div>
           </div>
+          <img src="/assets/yellow.svg" className="absolute z-5 pl-36 pt-6" />
           <div className="rounded-4xl bg-white/75 backdrop-blur-xs w-1/2 object-fit mx-auto mt-25 px-12 py-16 relative z-5">
             <div className="flex justify-between">
               <div>
@@ -140,6 +141,7 @@ export default function Home() {
           </div>
         </div>
         <div className="bg-[#0F141E] w-1/2 text-white">
+        <img src="/assets/purple.svg" className="absolute z-5 pl-145 pt-225" />
           <div className="mt-[202px] rounded-4xl bg-[#1F2937]/75 backdrop-blur-xs w-1/2 object-fit mx-auto px-12 py-16 relative z-5">
             <div className="flex justify-between">
               <div>
@@ -168,6 +170,7 @@ export default function Home() {
         <div className="rounded-full h-250 w-250 border border-white flex justify-center items-center">
           <div className="rounded-full h-150 w-150 border border-white flex justify-center items-center">
             <div className="rounded-full h-100 w-100 border border-white flex justify-center items-center">
+              <img src="/assets/logo.jpg" className="rounded-full w-50 h-50" />
             </div>
           </div>
         </div>
